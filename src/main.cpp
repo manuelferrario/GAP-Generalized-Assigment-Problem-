@@ -15,6 +15,7 @@ int main(int argc, char** argv) {
 
     sol = heuristica_2(inst, sol);
     sol.cost = computeCost(inst, sol);
+    sol.residual = computeResidual(inst, sol);
 
     writeOutput(argv[2], inst, sol);
     std::cout << "Solucion escrita en " << argv[2] << std::endl;

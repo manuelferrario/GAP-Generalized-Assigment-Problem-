@@ -77,3 +77,12 @@ int computeCost(const GAPInstance& inst, const GAPSolution& sol) {
     }
     return total;
 }
+
+std::vector<int> computeResidual(const GAPInstance& inst, const GAPSolution& sol) {
+    // Calcula la capacidad restante de cada deposito dada una solucion
+    std::vector<int> residual = inst.capacity;
+    for (int v = 0; v < inst.n; v++)
+        if (sol.assignment[v] != -1)
+            residual[sol.assignment[v]] -= inst.demand[sol.assignment[v]][v];
+    return residual;
+}

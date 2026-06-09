@@ -17,11 +17,13 @@ struct GAPInstance {    // Estructura de datos que representa la instancia de un
 // Una solución es, para cada vendedor j, a qué depósito está asignado (-1 = no asignado)
 struct GAPSolution {    // Estructura de datos que representa una solucion a GAP.
     std::vector<int> assignment;  // assignment[j] = i: vendedor j asignado al depósito i
-    int cost;
+    int cost = 0;
+    std::vector<int> residual;    // residual[i]: capacidad restante del depósito i
 };
 
 GAPInstance readInstance(const std::string& filename);
 int computeCost(const GAPInstance& inst, const GAPSolution& sol);
+std::vector<int> computeResidual(const GAPInstance& inst, const GAPSolution& sol);
 void writeOutput(const std::string& filename, const GAPInstance& inst, const GAPSolution& sol);
 
 GAPSolution heuristica_1(const GAPInstance& inst, GAPSolution sol);
