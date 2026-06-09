@@ -14,7 +14,8 @@ GAPInstance readInstance(const std::string& filename) {
     inst.demand.assign(inst.m, std::vector<int>(inst.n));
     inst.capacity.resize(inst.m);
 
-    double tmp;
+    double tmp; // Para leer los valores como double y luego convertirlos a int, evitando problemas de formato. (Heuristica 1)
+
     for (int i = 0; i < inst.m; i++)
         for (int j = 0; j < inst.n; j++) {
             file >> tmp;
@@ -54,4 +55,25 @@ void writeOutput(const std::string& filename, const GAPInstance& inst, const GAP
         }
         file << "\n";
     }
+}
+
+int computeCost(const GAPInstance& inst, const GAPSolution& sol) {
+    // Calcula el costo total de la solucion:
+    // suma de cost[d][v] para cada vendedor asignado
+    // + penalizacion de 3 * cmax por cada vendedor no asignado (-1)
+
+    // Calcular cmax
+    int cmax = 0;
+    for (int i = 0; i < inst.m; i++)
+        for (int j = 0; j < inst.n; j++)
+            if (inst.cost[i][j] > cmax) cmax = inst.cost[i][j];
+
+    int total = 0;
+    for (int v = 0; v < inst.n; v++) {
+        if (sol.assignment[v] == -1)
+            total += 3 * cmax;
+        else
+            total += inst.cost[sol.assignment[v]][v];
+    }
+    return total;
 }
