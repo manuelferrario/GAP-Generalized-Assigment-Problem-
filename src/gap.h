@@ -29,4 +29,5 @@ void writeOutput(const std::string& filename, const GAPInstance& inst, const GAP
 GAPSolution heuristica_1(const GAPInstance& inst, GAPSolution sol);
 GAPSolution heuristica_2(const GAPInstance& inst, GAPSolution sol);
 
-GAPSolution busqueda_local_1( const GAPInstance& inst, GAPSolution sol );
+GAPSolution busqueda_local_1(const GAPInstance& inst, GAPSolution sol);
+GAPSolution busqueda_local_2(const GAPInstance& inst, GAPSolution sol);
