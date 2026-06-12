@@ -87,67 +87,52 @@ GAPSolution busqueda_local_1( const GAPInstance& inst, GAPSolution sol ){
 }
 
 GAPSolution busqueda_local_2(const GAPInstance& inst, GAPSolution sol) {
-    // Busqueda local: Relocate
-    // PARTE 1: Mejora vendedores asignados (first improvement, orden por costo descendente)
-    //          Repite hasta no encontrar mejoras o hasta timeout.
-    // PARTE 2: Intenta colocar vendedores no asignados en el primer deposito que entre.
-
-    // (Asistencia de la IA para escribir este codigo, se le dio la idea general para que la implemente)
+    // Busqueda local 2: Swap
+    // Intercambia dos vendedores entre depositos si mejora el costo total.
+    // First improvement: aplica el primer intercambio que mejore y reinicia.
 
     int depositos  = inst.m;
     int vendedores = inst.n;
+    int timeout_seg = 60;
 
-    int timeout_seg = 60; // Tiempo maximo para la busqueda local (arbitrario)
-
-    // ── PARTE 1: mejorar asignados ────────────────────────────────────────
     auto inicio = chrono::steady_clock::now();
     bool mejoro = true;
 
     while (mejoro) {
-
         auto ahora = chrono::steady_clock::now();
         if (chrono::duration_cast<chrono::seconds>(ahora - inicio).count() >= timeout_seg)
             break;
 
         mejoro = false;
 
-        // Armar y ordenar asignados por costo actual descendente
-        vector<int> asignados;
-        for (int v = 0; v < vendedores; v++)
-            if (sol.assignment[v] != -1)
-                asignados.push_back(v);
+        for (int v1 = 0; v1 < vendedores && !mejoro; v1++) {
+            if (sol.assignment[v1] == -1) continue;
 
-        sort(asignados.begin(), asignados.end(), [&](int v1, int v2) {
-            return inst.cost[sol.assignment[v1]][v1] > inst.cost[sol.assignment[v2]][v2];
-        });
+            for (int v2 = v1 + 1; v2 < vendedores && !mejoro; v2++) {
+                if (sol.assignment[v2] == -1) continue;
 
-        for (int v : asignados) {
-            int d_actual     = sol.assignment[v];
-            int costo_actual = inst.cost[d_actual][v];
+                int d1 = sol.assignment[v1];
+                int d2 = sol.assignment[v2];
 
-            for (int d = 0; d < depositos; d++) {
-                if (d == d_actual) continue;
+                if (d1 == d2) continue;
 
-                if (sol.residual[d] >= inst.demand[d][v] && inst.cost[d][v] < costo_actual) {
-                    sol.residual[d_actual] += inst.demand[d_actual][v];  // libero d_actual
-                    sol.residual[d]        -= inst.demand[d][v];         // ocupo d
-                    sol.assignment[v]       = d;
+                // Factibilidad: residuales tras el intercambio
+                int residual_d1 = sol.residual[d1] + inst.demand[d1][v1] - inst.demand[d1][v2];
+                int residual_d2 = sol.residual[d2] + inst.demand[d2][v2] - inst.demand[d2][v1];
+
+                if (residual_d1 < 0 || residual_d2 < 0) continue;
+
+                // Mejora de costo
+                int costo_actual = inst.cost[d1][v1] + inst.cost[d2][v2];
+                int costo_swap   = inst.cost[d1][v2] + inst.cost[d2][v1];
+
+                if (costo_swap < costo_actual) {
+                    sol.assignment[v1] = d2;
+                    sol.assignment[v2] = d1;
+                    sol.residual[d1]   = residual_d1;
+                    sol.residual[d2]   = residual_d2;
                     mejoro = true;
-                    break;  // first improvement
                 }
-            }
-        }
-    }
-
-    // ── PARTE 2: meter no asignados en el primer deposito que entre ───────
-    for (int v = 0; v < vendedores; v++) {
-        if (sol.assignment[v] != -1) continue;
-
-        for (int d = 0; d < depositos; d++) {
-            if (sol.residual[d] >= inst.demand[d][v]) {
-                sol.assignment[v]  = d;
-                sol.residual[d]   -= inst.demand[d][v];
-                break;
             }
         }
     }

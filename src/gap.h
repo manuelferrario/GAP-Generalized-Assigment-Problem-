@@ -31,3 +31,4 @@ GAPSolution heuristica_2(const GAPInstance& inst, GAPSolution sol);
 
 GAPSolution busqueda_local_1(const GAPInstance& inst, GAPSolution sol);
 GAPSolution busqueda_local_2(const GAPInstance& inst, GAPSolution sol);
+GAPSolution metaheuristica(const GAPInstance& inst, int tamano_rcl);
