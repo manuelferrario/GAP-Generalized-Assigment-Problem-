@@ -126,10 +126,20 @@ GRASP en GAP_e (rcl=3): 58.8% asignados promedio, costo promedio 1.131.713.
 
 ## Uso de IA
 
-Según las reglas del TP, se utilizó IA (Claude) para:
-- Infraestructura de lectura/escritura de instancias (`gap.cpp`, `gap.h`)
-- Heurística 2 (`heuristica_2` en `heuristicas.cpp`) y BL2 (`busqueda_local_2` en `busqueda-local.cpp`)
-- Correcciones de compilación y debugging
-- Benchmarks de tests con GAP`s pasados por catedra.
-- Generación del archivo README.md
+Se utilizó IA (Claude) en dos conversaciones separadas. A continuación se detalla qué aportó cada una.
+
+### Conversación 1 — Lisandro (chat compartido)
+
+- **Heurística 1**: identificación del bug de la variable `d` que no se reiniciaba en el loop, y diseño de la fase de reparación para vendedores no asignados.
+- **Heurística 2**: diseño completo del algoritmo — criterio de prioridad `demanda_promedio / (costo_minimo + 1)`, ordenamiento de vendedores, asignación al depósito más barato con capacidad, fase de reparación.
+- **Búsqueda local 1 (relocate)**: diseño completo del pseudocódigo y código — ordenamiento por costo descendente, first improvement, timeout de 60s, manejo de no asignados en segunda fase.
+- **Búsqueda local 2 (swap)**: diseño completo del operador — chequeo de factibilidad via residuales, comparación de costos, first improvement con timeout de 60s.
+- **Metaheurística**: explicación de qué le faltaba al esqueleto del compañero (loop externo GRASP, criterio de mejor solución, integración con búsqueda local, reparación de no asignados) y código completo resultante.
+
+### Conversación 2 — Manuel (Claude Code, este chat)
+
+- **Infraestructura**: `gap.h`, `gap.cpp` — estructuras `GAPInstance` y `GAPSolution`, `readInstance`, `writeOutput`, `computeCost`, `computeResidual`.
+- **Integración y debugging**: corrección de residuales en BL1, fixes de compilación (`#include` faltantes, inicialización de `sol.assignment`), estructura del `main.cpp` con modos CLI.
+- **Benchmarks**: ejecución y análisis de resultados sobre todos los grupos de instancias GAP y la instancia real.
+- **README y análisis**: generación de este archivo y tablas de resultados.
 
