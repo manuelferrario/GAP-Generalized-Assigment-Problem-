@@ -86,6 +86,8 @@ Operador de intercambio con estrategia *first improvement* y timeout de 60 segun
 ### Metaheurística — GRASP (diseño de compañero de equipo)
 Loop de 60 segundos con construcción greedy aleatoria usando RCL (Restricted Candidate List) + Búsqueda local 2. En cada iteración construye una nueva solución eligiendo aleatoriamente entre los `k` mejores candidatos, aplica una fase de reparación para vendedores no asignados, y guarda la mejor solución encontrada.
 
+> **Nota:** el timeout está definido en `implementacion/metaheuristica.cpp` en la variable `timeout_seg`. Si se quiere reducir el tiempo de ejecución para hacer benchmarks rápidos, se puede bajar ese valor (por ejemplo a `10` o `15` segundos) antes de recompilar.
+
 ## Formato de entrada
 
 Formato estándar OR-Library:
@@ -126,5 +128,8 @@ GRASP en GAP_e (rcl=3): 58.8% asignados promedio, costo promedio 1.131.713.
 
 Según las reglas del TP, se utilizó IA (Claude) para:
 - Infraestructura de lectura/escritura de instancias (`gap.cpp`, `gap.h`)
-- Heurística 2 (`heuristica_2` en `heuristicas.cpp`)
+- Heurística 2 (`heuristica_2` en `heuristicas.cpp`) y BL2 (`busqueda_local_2` en `busqueda-local.cpp`)
 - Correcciones de compilación y debugging
+- Benchmarks de tests con GAP`s pasados por catedra.
+- Generación del archivo README.md
+
