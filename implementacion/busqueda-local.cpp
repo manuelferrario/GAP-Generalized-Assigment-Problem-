@@ -119,19 +119,19 @@ GAPSolution busqueda_local_2(const GAPInstance& inst, GAPSolution sol) {
                 // Factibilidad: residuales tras el intercambio
                 int residual_d1 = sol.residual[d1] + inst.demand[d1][v1] - inst.demand[d1][v2];
                 int residual_d2 = sol.residual[d2] + inst.demand[d2][v2] - inst.demand[d2][v1];
-
+                //No es factible, porque en alguno de los depositos no da abasto a la demanda.
                 if (residual_d1 < 0 || residual_d2 < 0) continue;
 
-                // Mejora de costo
+                // Si la solucion nueva es factible veo como quedan los costos de las dos soluciones
                 int costo_actual = inst.cost[d1][v1] + inst.cost[d2][v2];
                 int costo_swap   = inst.cost[d1][v2] + inst.cost[d2][v1];
-
+                // Si es mejor intercambio. Actualizo las variables correspondientes.
                 if (costo_swap < costo_actual) {
                     sol.assignment[v1] = d2;
                     sol.assignment[v2] = d1;
                     sol.residual[d1]   = residual_d1;
                     sol.residual[d2]   = residual_d2;
-                    mejoro = true;
+                    mejoro = true; // Si hubo una mejora con algun swap entre los vendedores sigo. Si en ninuga instancia mejoro, no hay swap que mejore. Corto
                 }
             }
         }
