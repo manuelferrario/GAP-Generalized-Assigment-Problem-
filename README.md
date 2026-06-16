@@ -104,6 +104,10 @@ capacity[0] capacity[1] ... capacity[m-1]
 
 `m` = depósitos, `n` = vendedores. Los valores pueden ser enteros o decimales.
 
+## Nota sobre pseudocódigos
+
+Los pseudocódigos de los algoritmos no fueron incluidos en el informe debido al límite de 10 páginas. El código fuente completo con comentarios está disponible en este repositorio y puede consultarse como referencia directa de la implementación.
+
 ## Formato de salida
 
 Una línea por depósito con los índices (base 0) de los vendedores asignados:
@@ -128,15 +132,14 @@ GRASP en GAP_e (rcl=3): 58.8% asignados promedio, costo promedio 1.131.713.
 
 Se utilizó IA (Claude) en dos conversaciones separadas. A continuación se detalla qué aportó cada una.
 
-### Conversación 1 — Lisandro (chat compartido)
+### Conversación 1 — Lisandro (Claude Code)
 
-- **Heurística 1**: identificación del bug de la variable `d` que no se reiniciaba en el loop, y diseño de la fase de reparación para vendedores no asignados.
+- **Heurística 1**: identificación del bug de la variable `d` que no se reiniciaba en el loop.
 - **Heurística 2**: diseño completo del algoritmo — criterio de prioridad `demanda_promedio / (costo_minimo + 1)`, ordenamiento de vendedores, asignación al depósito más barato con capacidad, fase de reparación.
-- **Búsqueda local 1 (relocate)**: diseño completo del pseudocódigo y código — ordenamiento por costo descendente, first improvement, timeout de 60s, manejo de no asignados en segunda fase.
 - **Búsqueda local 2 (swap)**: diseño completo del operador — chequeo de factibilidad via residuales, comparación de costos, first improvement con timeout de 60s.
-- **Metaheurística**: explicación de qué le faltaba al esqueleto del compañero (loop externo GRASP, criterio de mejor solución, integración con búsqueda local, reparación de no asignados) y código completo resultante.
+- **Metaheurística**: explicación de qué le faltaba al esqueleto del compañero (loop externo GRASP, criterio de mejor solución, integración con búsqueda local, reparación de no asignados).
 
-### Conversación 2 — Manuel (Claude Code, este chat)
+### Conversación 2 — Manuel (Claude Code)
 
 - **Infraestructura**: `gap.h`, `gap.cpp` — estructuras `GAPInstance` y `GAPSolution`, `readInstance`, `writeOutput`, `computeCost`, `computeResidual`.
 - **Integración y debugging**: corrección de residuales en BL1, fixes de compilación (`#include` faltantes, inicialización de `sol.assignment`), estructura del `main.cpp` con modos CLI.
